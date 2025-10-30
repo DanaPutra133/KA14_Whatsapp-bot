@@ -1,0 +1,53 @@
+
+global.owner = ['6281289694906']  
+global.mods = ['6281289694906'] 
+global.prems = ['6281289694906']
+global.nameowner = 'dana'
+global.mail = 'danaputra10012@gmail.com' 
+global.gc = 'https://chat.whatsapp.com/EUKH9asOX4y8DkikAtueEj'
+global.instagram = 'https://instagram.com/dana_putra13'
+global.wm = 'Aqua Bot'
+global.wait = '_*Tunggu sedang di proses...*_'
+global.eror = '_*Server Error*_'
+global.stiker_wait = '*⫹⫺ Stiker sedang dibuat...*'
+global.packname = 'aqua bot'
+global.author = '@dana_putra13'
+global.maxwarn = '2' // Peringatan maksimum
+global.antiporn = true // Auto delete pesan porno (bot harus admin)
+global.qris = 'https://cdn.btch.bz/file/fd7714ee03f6970d8fb30.jpg'
+
+//INI WAJIB DI ISI!//
+global.lann = '' 
+global.aksesKey = ''
+//Daftar terlebih dahulu https://api.betabotz.eu.org
+
+//untuk dapat apikey ini bisa chat owner api di 081289694906
+global.dana = '' //API dana
+
+
+//INI OPTIONAL BOLEH DI ISI BOLEH JUGA ENGGA//
+global.btc = ''
+//Daftar https://api.botcahx.eu.org
+ 
+global.APIs = {   
+  lann: 'https://api.betabotz.eu.org',
+  btc: 'https://api.botcahx.eu.org',
+  dana: 'https://api.danafxc.my.id'
+}
+global.APIKeys = { 
+  'https://api.betabotz.eu.org': '', 
+  'https://api.botcahx.eu.org': '',
+  'https://api.danafxc.my.id': '' 
+}
+
+let fs = require('fs')
+let chalk = require('chalk')
+let file = require.resolve(__filename)
+fs.watchFile(file, () => {
+  fs.unwatchFile(file)
+  console.log(chalk.redBright("Update 'config.js'"))
+  delete require.cache[file]
+  require(file)
+})
+
+
