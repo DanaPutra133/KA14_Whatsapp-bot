@@ -1,108 +1,129 @@
 let handler = async (m, { conn, command, args }) => {
-    try {
-        const API_URL = 'https://api.danafxc.my.id/api/proxy/tugas/mahasiswa';
-        
-        let response = await fetch(API_URL);
-        if (!response.ok) throw new Error(`Gagal mengambil data dari API (Status: ${response.status})`);
-        
-        let tasksList = await response.json();
-        if (!Array.isArray(tasksList)) throw new Error('Format data dari API tidak valid (harus nya sih array).');
-        if (tasksList.length === 0) return conn.reply(m.chat, 'Gak ada tugas/ Db nya error. Konfirmasi ke dana coba', m);
+  try {
+    const API_URL = "https://3ka14.danafxc.my.id/tugas/mahasiswa";
 
-        const calculateRemainingDays = (deadline) => {
-            const now = new Date();
-            const dueDate = new Date(deadline);
-            now.setHours(0, 0, 0, 0);
-            dueDate.setHours(0, 0, 0, 0);
-            const diffTime = dueDate.getTime() - now.getTime();
-            return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        };
+    let response = await fetch(API_URL);
+    if (!response.ok)
+      throw new Error(
+        `Gagal mengambil data dari API (Status: ${response.status})`
+      );
 
-        const formatTasks = (title, tasks) => {
-            if (!tasks || tasks.length === 0) return '';
-            let formatted = `*== ${title.toUpperCase()} ==*\n\n`;
-            tasks.forEach((t, i) => {
-                const remainingDays = calculateRemainingDays(t.deadline);
-                let deadlineText;
-                if (remainingDays < 0) deadlineText = `🔴 Terlambat ${Math.abs(remainingDays)} hari`;
-                else if (remainingDays === 0) deadlineText = `🔵 Deadline HARI INI!`;
-                else deadlineText = `Sisa ${remainingDays} hari lagi`;
+    let tasksList = await response.json();
+    if (!Array.isArray(tasksList))
+      throw new Error(
+        "Format data dari API tidak valid (harus nya sih array)."
+      );
+    if (tasksList.length === 0)
+      return conn.reply(
+        m.chat,
+        "Gak ada tugas/ Db nya error. Konfirmasi ke dana coba",
+        m
+      );
 
-                formatted += `${i + 1}. *${t.mataKuliah}*\n   - ${t.namaTugas}\n   - Deadline: ${deadlineText}\n\n`;
-            });
-            return formatted;
-        };
+    const calculateRemainingDays = (deadline) => {
+      const now = new Date();
+      const dueDate = new Date(deadline);
+      now.setHours(0, 0, 0, 0);
+      dueDate.setHours(0, 0, 0, 0);
+      const diffTime = dueDate.getTime() - now.getTime();
+      return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    };
 
-        if (command === 'rekap3ka14') {
-            const kategori = (args[0] || '').toLowerCase(); // ambil argumen setelah command
-            const praktikum = tasksList.filter(t => t.praktikum);
-            const vclass = tasksList.filter(t => t.vclass);
-            const ilab = tasksList.filter(t => t.ilab);
-            const kelompok = tasksList.filter(t => t.kelompok);
-            const mandiri = tasksList.filter(t => t.mandiri);
+    const formatTasks = (title, tasks) => {
+      if (!tasks || tasks.length === 0) return "";
+      let formatted = `*== ${title.toUpperCase()} ==*\n\n`;
+      tasks.forEach((t, i) => {
+        const remainingDays = calculateRemainingDays(t.deadline);
+        let deadlineText;
+        if (remainingDays < 0)
+          deadlineText = `🔴 Terlambat ${Math.abs(remainingDays)} hari`;
+        else if (remainingDays === 0) deadlineText = `🔵 Deadline HARI INI!`;
+        else deadlineText = `Sisa ${remainingDays} hari lagi`;
 
-            if (!kategori) {
-                // kalau user hanya ketik .rekap3ka14
-                let msg = `*Pilih kategori rekap yang ingin di lihat:*\n\n`;
-                msg += `• .rekap3ka14 semua\n`;
-                msg += `• .rekap3ka14 praktikum\n`;
-                msg += `• .rekap3ka14 vclass\n`;
-                msg += `• .rekap3ka14 ilab\n`;
-                msg += `• .rekap3ka14 kelompok\n`;
-                msg += `• .rekap3ka14 mandiri\n`;
-                return conn.reply(m.chat, msg, m);
-            }
+        formatted += `${i + 1}. *${t.matakuliah}*\n   - ${
+          t.Namatugas
+        }\n   - Deadline: ${deadlineText}\n\n`;
+      });
+      return formatted;
+    };
 
-            let result = '';
-            switch (kategori) {
-                case 'semua':
-                    result = '*-> REKAP SEMUA TUGAS 3KA14 <-*\n\n';
-                    result += formatTasks('Praktikum', praktikum);
-                    result += formatTasks('V-Class', vclass);
-                    result += formatTasks('iLab', ilab);
-                    result += formatTasks('Tugas Kelompok', kelompok);
-                    result += formatTasks('Tugas Mandiri', mandiri);
-                    break;
+    if (command === "rekap3ka14") {
+      const kategori = (args[0] || "").toLowerCase(); // ambil argumen setelah command
+      const praktikum = tasksList.filter((t) => t.praktikum);
+      const vclass = tasksList.filter((t) => t.vclass);
+      const ilab = tasksList.filter((t) => t.ilab);
+      const kelompok = tasksList.filter((t) => t.kelompok);
+      const mandiri = tasksList.filter((t) => t.Mandiri);
 
-                case 'praktikum':
-                    result = formatTasks('Praktikum', praktikum);
-                    break;
+      if (!kategori) {
+        // kalau user hanya ketik .testrekap3ka14
+        let msg = `*Pilih kategori rekap yang ingin di lihat:*\n\n`;
+        msg += `• .rekap3ka14 semua\n`;
+        msg += `• .rekap3ka14 praktikum\n`;
+        msg += `• .rekap3ka14 vclass\n`;
+        msg += `• .rekap3ka14 ilab\n`;
+        msg += `• .rekap3ka14 kelompok\n`;
+        msg += `• .rekap3ka14 mandiri\n`;
+        return conn.reply(m.chat, msg, m);
+      }
 
-                case 'vclass':
-                    result = formatTasks('V-Class', vclass);
-                    break;
+      let result = "";
+      switch (kategori) {
+        case "semua":
+          result = "*-> REKAP SEMUA TUGAS 3KA14 <-*\n\n";
+          result += formatTasks("Praktikum", praktikum);
+          result += formatTasks("V-Class", vclass);
+          result += formatTasks("iLab", ilab);
+          result += formatTasks("Tugas Kelompok", kelompok);
+          result += formatTasks("Tugas Mandiri", mandiri);
+          break;
 
-                case 'ilab':
-                    result = formatTasks('iLab', ilab);
-                    break;
+        case "praktikum":
+          result = formatTasks("Praktikum", praktikum);
+          break;
 
-                case 'kelompok':
-                    result = formatTasks('Tugas Kelompok', kelompok);
-                    break;
+        case "vclass":
+          result = formatTasks("V-Class", vclass);
+          break;
 
-                case 'mandiri':
-                    result = formatTasks('Tugas Mandiri', mandiri);
-                    break;
+        case "ilab":
+          result = formatTasks("iLab", ilab);
+          break;
 
-                default:
-                    return conn.reply(m.chat, 'gak ada kategori ini, cek lagi di .rekap3ka14', m);
-            }
+        case "kelompok":
+          result = formatTasks("Tugas Kelompok", kelompok);
+          break;
 
-            if (!result.trim()) {
-                return conn.reply(m.chat, `mau cari apa hayooo kan ngga ada tugas buat *${kategori}*`, m);
-            }
+        case "mandiri":
+          result = formatTasks("Tugas Mandiri", mandiri);
+          break;
 
-            conn.reply(m.chat, result.trim(), m);
-        }
+        default:
+          return conn.reply(
+            m.chat,
+            "gak ada kategori ini, cek lagi di .testrekap3ka14",
+            m
+          );
+      }
 
-    } catch (err) {
-        console.error(err);
-        conn.reply(m.chat, `Terjadi kesalahan: ${err.message}`, m);
+      if (!result.trim()) {
+        return conn.reply(
+          m.chat,
+          `mau cari apa hayooo kan ngga ada tugas buat *${kategori}*`,
+          m
+        );
+      }
+
+      conn.reply(m.chat, result.trim(), m);
     }
+  } catch (err) {
+    console.error(err);
+    conn.reply(m.chat, `Terjadi kesalahan: ${err.message}`, m);
+  }
 };
 
-handler.help = ['rekap3ka14'];
-handler.tags = ['tools'];
-handler.command = ['rekap3ka14'];
+handler.help = ["rekap3ka14"];
+handler.tags = ["tools"];
+handler.command = ["rekap3ka14"];
 
 module.exports = handler;
